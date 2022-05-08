@@ -21,8 +21,14 @@
       <dd><%= node.region %></dd>
       <dt>Ping Count</dt>
       <dd><%= node.ping_count %></dd>
-      <dt>Latency</dt>
+      <dt>Last Round Trip</dt>
       <dd><%= node.last_ping_ms %>ms</dd>
+      <dt>Max Round Trip</dt>
+      <dd><%= node.max_ping_ms %>ms</dd>
+      <dt>Avg Round Trip</dt>
+      <dd><%= :erlang.float_to_binary(node.total_ping_ms / max(node.ping_count, 1), decimals: 2) %>ms</dd>
+      <dt>Min Round Trip</dt>
+      <dd><%= node.min_ping_ms %>ms</dd>
     </dl>
   </div>
   <% end %>

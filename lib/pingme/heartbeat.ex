@@ -56,6 +56,9 @@ defmodule Pingme.Heartbeat do
         node
         | last_ping_ms: ms_elapsed,
           ping_count: node.ping_count + 1,
+          total_ping_ms: node.total_ping_ms + ms_elapsed,
+          max_ping_ms: max(node.max_ping_ms, ms_elapsed),
+          min_ping_ms: min(node.min_ping_ms, ms_elapsed),
           region: node_region
       })
 
