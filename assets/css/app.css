@@ -18,6 +18,17 @@ body {
   min-width: 40%;
 }
 
+.prop-list dt {
+  float: left;
+  clear: left;
+  width: 400px;
+  max-width: 200px;
+}
+
+.prop-list dd {
+  float: left;
+}
+
 h1, h2, h3 {
   font-family: 'Audiowide', sans-serif;
 }

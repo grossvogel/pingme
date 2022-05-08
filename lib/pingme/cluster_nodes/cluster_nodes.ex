@@ -7,4 +7,8 @@ defmodule Pingme.ClusterNodes do
   def self() do
     Node.self()
   end
+
+  def region() do
+    Application.get_env(:pingme, :region, "local")
+  end
 end

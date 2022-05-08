@@ -3,7 +3,7 @@ defmodule Pingme.Heartbeat do
   Ping other nodes in the cluster periodically
   """
   use GenServer
-  alias Pingme.ClusterNode
+  alias Pingme.{ClusterNode, ClusterNodes}
   require Logger
 
   @default_state %{
@@ -38,11 +38,16 @@ defmodule Pingme.Heartbeat do
 
   @impl GenServer
   def handle_info({:ping, from_node, start_ts}, state) do
-    Process.send({__MODULE__, from_node}, {:pong, Node.self(), start_ts}, [])
+    Process.send(
+      {__MODULE__, from_node},
+      {:pong, ClusterNodes.self(), ClusterNodes.region(), start_ts},
+      []
+    )
+
     {:noreply, state}
   end
 
-  def handle_info({:pong, from_node, start_ts}, %{nodes: nodes} = state) do
+  def handle_info({:pong, from_node, node_region, start_ts}, %{nodes: nodes} = state) do
     ms_elapsed = current_ts() - start_ts
     node = Map.get(nodes, from_node, %ClusterNode{name: from_node})
 
@@ -50,11 +55,19 @@ defmodule Pingme.Heartbeat do
       Map.put(nodes, from_node, %{
         node
         | last_ping_ms: ms_elapsed,
-          ping_count: node.ping_count + 1
+          ping_count: node.ping_count + 1,
+          region: node_region
       })
 
     next_state = Map.put(state, :nodes, next_nodes)
     Logger.info("Received ping from #{from_node} after #{ms_elapsed}ms: #{inspect(next_state)}")
+
+    PingmeWeb.Endpoint.local_broadcast(
+      "node_updated",
+      "pong",
+      %{:nodes => next_nodes}
+    )
+
     {:noreply, next_state}
   end
 
@@ -64,7 +77,7 @@ defmodule Pingme.Heartbeat do
 
     Enum.each(
       Node.list(),
-      fn node -> Process.send({__MODULE__, node}, {:ping, Node.self(), start_ts}, []) end
+      fn node -> Process.send({__MODULE__, node}, {:ping, ClusterNodes.self(), start_ts}, []) end
     )
 
     Process.send_after(self(), :ping_nodes, state.ping_interval_seconds * 1000)

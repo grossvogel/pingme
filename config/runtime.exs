@@ -86,4 +86,6 @@ if config_env() == :prod do
         ]
       ]
     ]
+
+  config :pingme, region: System.get_env("FLY_REGION")
 end

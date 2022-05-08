@@ -4,7 +4,9 @@
       <span class="icon-home"></span>
       <%= @self %>
     </h1>
-    <dl>
+    <dl class="prop-list">
+      <dt>Region</dt>
+      <dd><%= @region %></dd>
       <dt>Ping Interval</dt>
       <dd><%= @ping_interval %>s</dd>
     </dl>
@@ -14,7 +16,9 @@
   <%= for node <- @peers do %>
   <div class="card">
     <h2><%= node.name %></h2>
-    <dl>
+    <dl class="prop-list">
+      <dt>Region</dt>
+      <dd><%= node.region %></dd>
       <dt>Ping Count</dt>
       <dd><%= node.ping_count %></dd>
       <dt>Latency</dt>
