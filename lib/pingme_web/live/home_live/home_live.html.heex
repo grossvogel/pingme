@@ -1,12 +1,25 @@
 <div class="flex">
   <div class="card">
-    <h1>Current Node: <%= @self %></h1>
+    <h1>
+      <span class="icon-home"></span>
+      <%= @self %>
+    </h1>
+    <dl>
+      <dt>Ping Interval</dt>
+      <dd><%= @ping_interval %>s</dd>
+    </dl>
   </div>
 </div>
 <div class="flex">
   <%= for node <- @peers do %>
   <div class="card">
     <h2><%= node.name %></h2>
+    <dl>
+      <dt>Ping Count</dt>
+      <dd><%= node.ping_count %></dd>
+      <dt>Latency</dt>
+      <dd><%= node.last_ping_ms %>ms</dd>
+    </dl>
   </div>
   <% end %>
 </div>

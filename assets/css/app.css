@@ -20,13 +20,13 @@ h1, h2, h3 {
   font-family: 'Audiowide', sans-serif;
 }
 h1 {
-  font-size: 48px;
+  font-size: 38px;
 }
 h2 {
-  font-size: 32px;
+  font-size: 24px;
 }
 h3 {
-  font-size: 24px;
+  font-size: 20px;
 }
 
 /* Alerts and form errors used by phx.new */

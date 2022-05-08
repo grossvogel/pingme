@@ -89,6 +89,4 @@ COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/pingme ./
 
 USER nobody
 
-EXPOSE 8080
-
-CMD ["/app/bin/pingme", "start"]
+CMD ["/app/bin/server"]
