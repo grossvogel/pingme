@@ -59,8 +59,11 @@ const initChart = (nodeName) => {
       maintainAspectRatio: false,
       scales: {
         xAxis: {
-          drawBorder: false,
-          drawTicks: false,
+          grid: {
+            display: false,
+            drawBorder: false,
+            drawTicks: false,
+          },
           ticks: {
             color: "rgb(186, 230, 253)",
             autoSkip: true,
@@ -70,9 +73,11 @@ const initChart = (nodeName) => {
           },
         },
         yAxis: {
-          borderColor: "rgb(186, 230, 253)",
-          drawBorder: true,
-          drawTicks: false,
+          grid: {
+            display: false,
+            drawBorder: false,
+            drawTicks: false,
+          },
           ticks: {
             color: "rgb(186, 230, 253)",
           },

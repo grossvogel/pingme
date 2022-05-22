@@ -6,6 +6,7 @@ defmodule Pingme.ClusterNodes do
 
   # store 3 hours worth of pings by default (at 5s interval)
   @ping_history_size round(60 / 5 * 60 * 3)
+  @stale_node_threshold_seconds 120
 
   def self() do
     Node.self()
@@ -35,6 +36,7 @@ defmodule Pingme.ClusterNodes do
     %{
       node
       | last_ping_ms: ms_elapsed,
+        last_ping_ts: DateTime.to_unix(DateTime.utc_now()),
         ping_count: node.ping_count + 1,
         total_ping_ms: node.total_ping_ms + ms_elapsed,
         sum_of_squares: node.sum_of_squares + ms_elapsed * ms_elapsed,
@@ -42,5 +44,17 @@ defmodule Pingme.ClusterNodes do
         min_ping_ms: min(node.min_ping_ms, ms_elapsed),
         ping_history: RingBuffer.add(node.ping_history, ms_elapsed)
     }
+  end
+
+  @doc """
+  Remove any nodes we haven't heard from for a specified amount of time
+  """
+  @spec filter_stale_nodes(map()) :: map()
+  def filter_stale_nodes(nodes) do
+    current_ts = DateTime.to_unix(DateTime.utc_now())
+
+    Map.filter(nodes, fn {_node_name, %ClusterNode{last_ping_ts: last_ping_ts}} ->
+      current_ts - last_ping_ts <= @stale_node_threshold_seconds
+    end)
   end
 end

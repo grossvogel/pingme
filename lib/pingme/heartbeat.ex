@@ -50,7 +50,12 @@ defmodule Pingme.Heartbeat do
   def handle_info({:pong, from_node, node_region, start_ts}, %{nodes: nodes} = state) do
     ms_elapsed = current_ts() - start_ts
     node = Map.get(nodes, from_node, ClusterNodes.new(from_node, node_region))
-    next_nodes = Map.put(nodes, from_node, ClusterNodes.record_ping(node, ms_elapsed))
+
+    next_nodes =
+      nodes
+      |> Map.put(from_node, ClusterNodes.record_ping(node, ms_elapsed))
+      |> ClusterNodes.filter_stale_nodes()
+
     next_state = Map.put(state, :nodes, next_nodes)
 
     Logger.info("Received pong from #{from_node} after #{ms_elapsed}ms")

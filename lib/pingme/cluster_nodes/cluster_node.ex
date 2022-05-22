@@ -5,6 +5,7 @@ defmodule Pingme.ClusterNode do
   defstruct(
     name: nil,
     last_ping_ms: nil,
+    last_ping_ts: nil,
     max_ping_ms: -1,
     min_ping_ms: 100_000_000,
     total_ping_ms: 0,
