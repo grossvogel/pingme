@@ -8,7 +8,9 @@ defmodule Pingme.ClusterNode do
     max_ping_ms: -1,
     min_ping_ms: 100_000_000,
     total_ping_ms: 0,
+    sum_of_squares: 0,
     ping_count: 0,
+    ping_history: nil,
     region: "local"
   )
 

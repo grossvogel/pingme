@@ -17,12 +17,15 @@ defmodule PingmeWeb.HomeLive do
     {:ok, socket}
   end
 
-  @impl GenServer
-  def handle_info(%{topic: "node_updated", event: "pong"}, socket) do
-    {:noreply, assign(socket, :peers, Map.values(Heartbeat.get_nodes()))}
+  @impl Phoenix.LiveView
+  def handle_info(%{topic: "node_updated", event: "pong", payload: payload}, socket) do
+    {:noreply,
+     socket
+     |> assign(:peers, Map.values(Heartbeat.get_nodes()))
+     |> push_event("node_pong", payload)}
   end
 
-  @impl GenServer
+  @impl Phoenix.LiveView
   def handle_info(args, socket) do
     Logger.warning("Received unexpected message: #{inspect(args)}")
     {:noreply, socket}

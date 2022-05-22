@@ -29,7 +29,14 @@
       <dd><%= :erlang.float_to_binary(node.total_ping_ms / max(node.ping_count, 1), decimals: 2) %>ms</dd>
       <dt>Min Round Trip</dt>
       <dd><%= node.min_ping_ms %>ms</dd>
+      <dt>Std Deviation</dt>
+      <dd><%= :erlang.float_to_binary(ClusterNodes.std_deviation(node), decimals: 5) %>ms</dd>
     </dl>
+    <div phx-update="ignore" class="clear-both pt-6" id={"nodeHistoryData-#{node.name}"}>
+      <h3 class="mb-3">Ping History</h3>
+      <input type="hidden" value={Jason.encode!(Pingme.RingBuffer.to_list(node.ping_history))}>
+      <canvas height="400" class="w-full"></canvas>
+    </div>
   </div>
   <% end %>
 </div>
