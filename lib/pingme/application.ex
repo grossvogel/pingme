@@ -9,8 +9,7 @@ defmodule Pingme.Application do
   def start(_type, _args) do
     children = [
       # Start the Ecto repository
-      # no need right now
-      # Pingme.Repo,
+      Pingme.Repo,
       # Start the Telemetry supervisor
       PingmeWeb.Telemetry,
       # Start the PubSub system
